@@ -205,11 +205,12 @@ class PyNAFF(object):
 
         # these are used for the main function
         self.NFS = 0
+        self.NFR    = 100                                           # maximum number of frequencies allowed  # @TODO this is useless
         self.TFS = np.zeros(self.NFR).astype('float64')
         self.ZAMP = np.zeros(self.NFR).astype('complex128') #np.array([np.complex(0.,0.) for i in xrange(self.NFR)])
         self.ZALP = np.zeros((self.NFR,self.NFR)).astype('complex128')
-        
-        self.NFR    = 100                                           # maximum number of frequencies allowed  # @TODO this is useless
+
+
         self.KTABSM = 500000                                        # maximum number of turns allowed        # @TODO this is useless
         self.ZRTABS = np.zeros(self.KTABSM+1).astype('complex128')  # Temporary real tab array  (used for comparison of frequencies)
         self.ZAMPR  = np.zeros(self.NFR).astype('complex128')       # Temporary amplitude array (used for comparison of frequencies)
