@@ -1,35 +1,34 @@
 # PyNAFF
 
-Authors: 
+Authors:
+
 *  Foteini Asvesta (fasvesta .at. cern .dot. ch)
 *  Nikos Karastathis (nkarast .at. cern .dot. ch)
 *  Panagiotis Zisopoulos (pzisopou .at. cern .dot. ch)
 
-**Contact** : Nikos Karastathis (nkarast .at. cern .dot. ch)
-**Compatibility** : Python 2.7+, 3.6+
-
 A Python module that implements the [Numerical Analysis of Fundamental Frequencies method of J. Lashkar](http://www.sciencedirect.com/science/article/pii/001910359090084M).
+The code works either as a script (as the original code of Lashkar) or loaded as a module in Python/Julia code or jupyter-like notebooks (i.e. SWAN).
 
 
-## How to use it
+## Example of Usage
+```python
+import PyNAFF as pnf
+import numpy as np
 
-* Load the module (for CERN users contact the authors for the SWAN version)
-`import numpy as np
-import PyNAFF as pnf`
+t = np.linspace(1, 3000, num=3000, endpoint=True)
+Q = 0.12345
+signal = np.sin(2.0*np.pi*Q*t)
+pnf.naff(signal, 500, 1, 0 , False)
+# outputs an array of arrays for each frequency. Each sub-array includes:
+# [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude]
 
-* Request for 500 turns , 1 term, without skipping any rows in the array, and run with rFFT (False default)
 
-`pnf.naff(signal, 500, 2, 0 , False)`
+# My frequency is simply 
+pnf.naff(signal, 500, 1, 0 , False)[0][1]
 
-The output is an array of arrays. Each array contains a frequency term found.
-The indices in the array correspond to :
-*   Term ID : Integer number denoting the term
-* Frequency
-* Amplitude
-* Re{Amplitude}
-* Im{Amplitude}
+```
 
-Example @ Jupyter : https://cernbox.cern.ch/index.php/s/dHDZ2d7ufreC8EV
+
 
 
 -- nkarast
