@@ -1,9 +1,12 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
-from builtins import range, int
+try:
+    from builtins import range, int
+except ImportError:
+    from __builtin__ import range, int
 import numpy as np
 """
 # NAFF - Numerical Analysis of Fundamental Frequencies
-# Version : 1.1
+# Version : 1.1.2
 # Authors : F. Asvesta, N. Karastathis, P.Zisopoulos
 # Contact : nkarast .at. cern .dot. ch
 #
@@ -14,7 +17,7 @@ import numpy as np
 #	v1.1: Py3 compatibility - NK
 """
 
-__version   = 1.1
+__version   = '1.1.2'
 __PyVersion = [2.7, 3.6]
 __authors   = ['F. Asvesta','N. Karastathis', 'P. Zisopoulos']
 __contact   = ['nkarast .at. cern .dot. ch']
@@ -51,7 +54,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 	'ZTABS' 	: np.array([]).astype('complex128'),
 	'TWIN'  	: np.array([]).astype('float64'),
 	}
-	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - 
+	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - -
 	def getIntegral(FR, turns):
 		'''
 		Calculate the integral using Hardy's method'
@@ -59,7 +62,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 		if np.mod(turns, 6)!= 0:
 			raise ValueError("Turns need to be *6")
 		K = int(turns/6)
-		
+
 		i_line = np.linspace(1, turns, num=turns, endpoint=True)
 		ZTF_tmp = vars['ZTABS'][1:]*vars['TWIN'][1:]*np.exp(-2.0*(i_line)*np.pi*1.0j*FR)
 		ZTF = np.array(vars['ZTABS'][0]*vars['TWIN'][0])
@@ -73,7 +76,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 		B = np.imag(ZOM)
 		RMD = np.abs(ZOM)
 		return RMD, A, B
-	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - 
+	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - -
 	def frefin(turns, FR, STAREP, EPS):
 		'''
 		Try to refine the frequency found using slopes & root finding methods
@@ -85,7 +88,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 		X1  = X2 - PAS
 		X3  = X2 + PAS
 		Y1, A1, B1  = getIntegral(X1, turns)
-		Y3, A3, B3  = getIntegral(X3, turns)	
+		Y3, A3, B3  = getIntegral(X3, turns)
 		while True:
 			if PAS >=EPS:
 				if np.abs(Y3-Y1) < EPSI:
@@ -127,9 +130,9 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 						PAS=PAS+EPS
 
 			else:
-				break	
+				break
 		return X2, Y2, A2, B2
-	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - 
+	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - -
 	def fretes(FR, FREFON):
 		'''
 		If more than one term found, check how different they are
@@ -149,10 +152,10 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 					IFLAG = 0
 					continue
 		return IFLAG, NUMFR
-	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - 
+	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - -
 	def modfre(turns, FR, NUMFR, A, B):
 		'''
-		If I found something very close to one of the FR before, I assume that this comes from data 
+		If I found something very close to one of the FR before, I assume that this comes from data
 		I had not removed successfully => Remove them without orthonormalization
 		'''
 		ZI  = 0. + 1.0j
@@ -167,7 +170,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 		ZT     = np.append(ZT, ZT_tmp).ravel()
 		ZTABS_tmp = vars['ZTABS'] - ZT
 		vars['ZTABS'] = ZTABS_tmp
-	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - 
+	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - -
 	def proscaa(turns, FS, FS_OLD):
 		ZI = 0.0+1.0j
 		OM = FS-FS_OLD
@@ -181,10 +184,10 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 		ZOM = 41.*ZTF[0]+216.*ZTF[1]+27.*ZTF[2]+272.*ZTF[3]+27.*ZTF[4]+216.*ZTF[5]+41.*ZTF[int(N)-1]
 		for I in range(1, int(turns/6)):
 			ZOM=ZOM+82.0*ZTF[6*I+1-1]+216.0*ZTF[6*I+2-1]+27.0*ZTF[6*I+3-1]+272.0*ZTF[6*I+4-1]+27.0*ZTF[6*I+5-1]+216.0*ZTF[6*I+6-1]
-			
+
 		ZOM=ZOM*(1.0/turns)*(6.0/840.0)
 		return ZOM
-	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - 	
+	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - -
 	def gramsc(turns, FR, A, B):
 		'''
 		Remove the contribution of the frequency found from the Data and orthonormalize
@@ -215,7 +218,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 		vars['ZALP'][NF-1,:] = vars['ZALP'][NF-1,:]/DIV
 		ZMUL = np.complex(A,B)/DIV
 		ZI = 0.0+1.0j
-		
+
 		for i in range(0, NF):
 			ZOM = 1.0j*vars['TFS'][i]
 			ZA  = vars['ZALP'][NF-1,i]*ZMUL
@@ -227,7 +230,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 			vars['ZTABS'] = vars['ZTABS'] - ZT
 
 
-	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - 
+	# - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - - * - -
 	FREFON = 1.0/turns
 	NEPS   = 100000000
 	EPS    = FREFON/NEPS
@@ -235,7 +238,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 	T    = np.linspace(0, turns, num=turns+1, endpoint=True)*2.0*np.pi - np.pi*turns
 	vars['TWIN'] = 1.0+np.cos(T/turns)
 	vars['ZTABS'] = data[skipTurns:skipTurns+turns+1]
-	
+
 	TOL = 1.0e-4
 	STAREP = FREFON/3.0
 	for term in range(nterms):
@@ -245,7 +248,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 		else:
 			y = np.fft.rfft(data_for_fft.astype('float64'))
 
-		RTAB = np.sqrt(np.real(y)**2 + np.imag(y)**2)/turns  # normalized 
+		RTAB = np.sqrt(np.real(y)**2 + np.imag(y)**2)/turns  # normalized
 		INDX = np.argmax(RTAB)
 		VMAX = np.max(RTAB)
 
@@ -275,7 +278,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 	return np.array(result)
 
 
-### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### 
+### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ###
 
 # Example
 if __name__ == '__main__':
