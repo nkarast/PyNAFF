@@ -192,11 +192,6 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 		'''
 		Remove the contribution of the frequency found from the Data and orthonormalize
 		'''
-		# global NFS
-		# global ZTABS
-		# global ZALP
-		# global TFS
-		# global ZAMP
 
 		ZTEE = np.zeros(vars['NFS']+1).astype('complex128')
 		for i in range(0, vars['NFS']):
@@ -236,6 +231,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 	EPS    = FREFON/NEPS
 
 	T    = np.linspace(0, turns, num=turns+1, endpoint=True)*2.0*np.pi - np.pi*turns
+    #@todo add window
 	vars['TWIN'] = 1.0+np.cos(T/turns)
 	vars['ZTABS'] = data[skipTurns:skipTurns+turns+1]
 
@@ -253,7 +249,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 		VMAX = np.max(RTAB)
 
 		if INDX == 0 :
-			print('## PyNAFF: REMOVE DC FREQUENCY FROM DATA')
+			print('## PyNAFF::naff: Remove the DC component from the data (i.e. the mean).')
 		if INDX <= turns/2.0:
 			IFR = INDX - 1
 		else:
