@@ -1,24 +1,18 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 try:
-    from builtins import range, int
+	from builtins import range, int
 except ImportError:
-    from __builtin__ import range, int
+	from __builtin__ import range, int
 import numpy as np
 """
 # NAFF - Numerical Analysis of Fundamental Frequencies
-# Version : 1.1.2
+# Version : 1.1.4
 # Authors : F. Asvesta, N. Karastathis, P.Zisopoulos
 # Contact : nkarast .at. cern .dot. ch
 #
-#
-#	CHANGELOG
-#	v0.1: Basic structure of code - NK
-#	v1.0: Vectorizing computations & error catcher at modfre - NK FA
-#	v1.1: Py3 compatibility - NK
-#   v1.1.3 Window option added - NK
 """
 
-__version   = '1.1.3'
+__version   = '1.1.4'
 __PyVersion = [2.7, 3.6]
 __authors   = ['F. Asvesta','N. Karastathis', 'P. Zisopoulos']
 __contact   = ['nkarast .at. cern .dot. ch']
@@ -27,18 +21,18 @@ __contact   = ['nkarast .at. cern .dot. ch']
 def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1):
 	'''
 	The driving function for the NAFF algorithm.
-    Inputs :
-    *  data : NumPy array with TbT data
-    *  turns : number of points to consider from the input data
-    *  nterms : maximum number of harmonics to search for in the data sample
-    *  skipTurns : number of observations (data points) to skip from the start of the input iterable
-    *  getFullSpectrum : [True | False]
-                      If True, a normal FFT is used (both negative and positive frequencies)
-                      If False, an rFFT is used (only positive frequencies)
-    *  window : the order of window to be applied on the input data (default =1)
-    Returns : Array with frequencies and amplitudes in the format:
-          [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude}]
-    '''
+	Inputs :
+	*  data : NumPy array with TbT data
+	*  turns : number of points to consider from the input data
+	*  nterms : maximum number of harmonics to search for in the data sample
+	*  skipTurns : number of observations (data points) to skip from the start of the input iterable
+	*  getFullSpectrum : [True | False]
+					  If True, a normal FFT is used (both negative and positive frequencies)
+					  If False, an rFFT is used (only positive frequencies)
+	*  window : the order of window to be applied on the input data (default =1)
+	Returns : Array with frequencies and amplitudes in the format:
+		  [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude}]
+	'''
 	if turns >= len(data)+1:
 		raise ValueError('#naff : Input data must be at least of length turns+1.')
 	if turns < 6:
@@ -235,7 +229,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 
 	T    = np.linspace(0, turns, num=turns+1, endpoint=True)*2.0*np.pi - np.pi*turns
 	vars['TWIN'] = 1.0+np.cos(T/turns)
-    vars['TWIN'] = ((2.0**window*np.math.factorial(window)**2)/float(np.math.factorial(2*window)))*(1.0+np.cos(T/turns))**window
+	vars['TWIN'] = ((2.0**window*np.math.factorial(window)**2)/float(np.math.factorial(2*window)))*(1.0+np.cos(T/turns))**window
 	vars['ZTABS'] = data[skipTurns:skipTurns+turns+1]
 
 	TOL = 1.0e-4

@@ -23,7 +23,7 @@ Example of Usage
    t = np.linspace(1, 3000, num=3000, endpoint=True)
    Q = 0.12345
    signal = np.sin(2.0*np.pi*Q*t)
-   pnf.naff(signal, 500, 1, 0 , False)
+   pnf.naff(signal, 500, 1, 0 , False, window=1)
    # outputs an array of arrays for each frequency. Each sub-array includes:
    # [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude]
 
