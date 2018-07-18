@@ -15,27 +15,30 @@ import numpy as np
 #	v0.1: Basic structure of code - NK
 #	v1.0: Vectorizing computations & error catcher at modfre - NK FA
 #	v1.1: Py3 compatibility - NK
+#   v1.1.3 Window option added - NK
 """
 
-__version   = '1.1.2'
+__version   = '1.1.3'
 __PyVersion = [2.7, 3.6]
 __authors   = ['F. Asvesta','N. Karastathis', 'P. Zisopoulos']
 __contact   = ['nkarast .at. cern .dot. ch']
 
 
-def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
+def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1):
 	'''
-	The function for NAFF
-	Inputs :
-			data 			= numpy array with TbT data
-			turns 			= how many turns to get out of the data array
-			nterms			= up to how many terms to look for (if less than this available execution will stop)
-			skipTurns		= how many turns to skip from the input array
-			getFullSpectrum = True  -> FFT : both negative and positive frequencies
-					  False -> RFFT: only positive frequencies (abs)
-	Returns : Array with frequencies and amplitudes in the format:
-				[order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude}]
-	'''
+	The driving function for the NAFF algorithm.
+    Inputs :
+    *  data : NumPy array with TbT data
+    *  turns : number of points to consider from the input data
+    *  nterms : maximum number of harmonics to search for in the data sample
+    *  skipTurns : number of observations (data points) to skip from the start of the input iterable
+    *  getFullSpectrum : [True | False]
+                      If True, a normal FFT is used (both negative and positive frequencies)
+                      If False, an rFFT is used (only positive frequencies)
+    *  window : the order of window to be applied on the input data (default =1)
+    Returns : Array with frequencies and amplitudes in the format:
+          [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude}]
+    '''
 	if turns >= len(data)+1:
 		raise ValueError('#naff : Input data must be at least of length turns+1.')
 	if turns < 6:
@@ -231,8 +234,8 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False):
 	EPS    = FREFON/NEPS
 
 	T    = np.linspace(0, turns, num=turns+1, endpoint=True)*2.0*np.pi - np.pi*turns
-    #@todo add window
 	vars['TWIN'] = 1.0+np.cos(T/turns)
+    vars['TWIN'] = ((2.0**window*np.math.factorial(window)**2)/float(np.math.factorial(2*window)))*(1.0+np.cos(T/turns))**window
 	vars['ZTABS'] = data[skipTurns:skipTurns+turns+1]
 
 	TOL = 1.0e-4
