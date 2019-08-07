@@ -18,7 +18,25 @@ import numpy as np
 t = np.linspace(1, 3000, num=3000, endpoint=True)
 Q = 0.12345
 signal = np.sin(2.0*np.pi*Q*t)
-pnf.naff(signal, turns=500, nterm=1, 0 , False, window=1)
+
+
+# Signature: pnf.naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1)
+# Docstring:
+# The driving function for the NAFF algorithm.
+# Inputs :
+# *  data : NumPy array with TbT data
+# *  turns : number of points to consider from the input data
+# *  nterms : maximum number of harmonics to search for in the data sample
+# *  skipTurns : number of observations (data points) to skip from the start of the input iterable
+# *  getFullSpectrum : [True | False]
+#                                   If True, a normal FFT is used (both negative and positive frequencies)
+#                                   If False, an rFFT is used (only positive frequencies)
+# *  window : the order of window to be applied on the input data (default =1)
+# Returns : Array with frequencies and amplitudes in the format:
+#           [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude}]
+
+pnf.naff(signal, turns=500, nterm=1, skipTurns=0, getFullSpectrum=False, window=1)
+
 # outputs an array of arrays for each frequency. Each sub-array includes:
 # [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude]
 
