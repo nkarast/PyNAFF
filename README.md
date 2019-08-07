@@ -35,7 +35,7 @@ signal = np.sin(2.0*np.pi*Q*t)
 # Returns : Array with frequencies and amplitudes in the format:
 #           [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude}]
 
-pnf.naff(signal, turns=500, nterm=1, skipTurns=0, getFullSpectrum=False, window=1)
+pnf.naff(signal, turns=500, nterms=1, skipTurns=0, getFullSpectrum=False, window=1)
 
 # outputs an array of arrays for each frequency. Each sub-array includes:
 # [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude]
