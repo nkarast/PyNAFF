@@ -43,7 +43,7 @@ signal = np.sin(2.0*np.pi*Q*t)
 # *  nterms : maximum number of harmonics to search for in the data sample
 # *  skipTurns : number of observations (data points) to skip from the start of the input iterable
 # *  getFullSpectrum : [True | False]
-#                                   If True, a normal FFT is used (both negative and positive frequencies)
+#                                   If True, a normal FFT is used (both negative and positive freq.)
 #                                   If False, an rFFT is used (only positive frequencies)
 # *  window : the order of window to be applied on the input data (default =1)
 # Returns : Array with frequencies and amplitudes in the format:
