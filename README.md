@@ -10,6 +10,20 @@ A Python module that implements the [Numerical Analysis of Fundamental Frequenci
 The code works either as a script (as the original code of Lashkar) or loaded as a module in Python/Julia code or jupyter-like notebooks (i.e. SWAN).
 
 
+## Installation:
+
+The module is ported in [PyPi](https://pypi.org/project/PyNAFF/) so the user can simply run:
+
+```bash
+pip install --user PyNAFF
+```
+
+or from Git:
+```bash
+pip install --user git+https://github.com/nkarast/PyNAFF.git
+```
+
+
 ## Example of Usage
 ```python
 import PyNAFF as pnf
