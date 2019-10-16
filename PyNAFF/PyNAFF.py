@@ -134,7 +134,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 		'''
 		If more than one term found, check how different they are
 		'''
-		TOL   = 1.0e-4 # this is defined in mftnaf in lashkar
+		#TOL   = 1.0e-4 # this is defined in mftnaf in lashkar
 		IFLAG = 1
 		NUMFR = 0
 		ECART = np.abs(FREFON)
@@ -232,7 +232,8 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 	vars['TWIN'] = ((2.0**window*np.math.factorial(window)**2)/float(np.math.factorial(2*window)))*(1.0+np.cos(T/turns))**window
 	vars['ZTABS'] = data[skipTurns:skipTurns+turns+1]
 
-	TOL = 1.0e-4
+	#TOL = 1.0e-4
+	TOL=1 # Panos: Larger Tolerance allows for the recovery of more harmonics
 	STAREP = FREFON/3.0
 	for term in range(nterms):
 		data_for_fft = np.multiply(vars['ZTABS'], vars['TWIN'])[:-1] # .astype('complex128')
