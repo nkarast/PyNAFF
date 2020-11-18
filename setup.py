@@ -20,7 +20,7 @@ include_dirs = [np.get_include()]
 
 setup(
     name = "PyNAFF",
-    version = '1.1.4',
+    version = '1.1.5',
     description = 'A Python module that implements NAFF algorithm',
     long_description = long_description,
     # projects main page

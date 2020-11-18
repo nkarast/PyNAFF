@@ -8,8 +8,8 @@ Authors:
 -  Panagiotis Zisopoulos (pzisopou .at. cern .dot. ch)
 
 A Python module that implements the `Numerical Analysis of Fundamental
-Frequencies method of J. Lashkar`_. The code works either as a script
-(as the original code of Lashkar) or loaded as a module in Python/Julia
+Frequencies method of J. Laskar`_. The code works either as a script
+(as the original code of Laskar) or loaded as a module in Python/Julia
 code or jupyter-like notebooks (i.e. SWAN).
 
 Example of Usage
@@ -33,4 +33,4 @@ Example of Usage
 
 – nkarast
 
-.. _Numerical Analysis of Fundamental Frequencies method of J. Lashkar: http://www.sciencedirect.com/science/article/pii/001910359090084M
+.. _Numerical Analysis of Fundamental Frequencies method of J. Laskar: http://www.sciencedirect.com/science/article/pii/001910359090084M

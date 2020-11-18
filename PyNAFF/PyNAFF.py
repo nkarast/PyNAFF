@@ -4,6 +4,7 @@ try:
 except ImportError:
 	from __builtin__ import range, int
 import numpy as np
+from warnings import warn
 """
 # NAFF - Numerical Analysis of Fundamental Frequencies
 # Version : 1.1.4
@@ -18,7 +19,7 @@ __authors   = ['F. Asvesta','N. Karastathis', 'P. Zisopoulos']
 __contact   = ['nkarast .at. cern .dot. ch']
 
 
-def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1):
+def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1, tol=1.0, warnings=True):
 	'''
 	The driving function for the NAFF algorithm.
 	Inputs :
@@ -30,6 +31,8 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 					  If True, a normal FFT is used (both negative and positive frequencies)
 					  If False, an rFFT is used (only positive frequencies)
 	*  window : the order of window to be applied on the input data (default =1)
+	*  tol : in original NAFF, tol=1e-4 (Laskar, mftnaf). Panos: Larger Tolerance tol=1 allows for the recovery of more harmonics
+
 	Returns : Array with frequencies and amplitudes in the format:
 		  [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude}]
 	'''
@@ -133,15 +136,14 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 	def fretes(FR, FREFON):
 		'''
 		If more than one term found, check how different they are
-		'''
-		#TOL   = 1.0e-4 # this is defined in mftnaf in lashkar
+                '''
 		IFLAG = 1
 		NUMFR = 0
 		ECART = np.abs(FREFON)
 		for i in range(len(vars['TFS'])):
 			TEST = np.abs(vars['TFS'][i] - FR)
 			if TEST < ECART:
-				if np.float(TEST)/np.float(ECART) < TOL:
+				if np.float(TEST)/np.float(ECART) < tol:
 					IFLAG = -1
 					NUMFR = i
 					break
@@ -232,8 +234,6 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 	vars['TWIN'] = ((2.0**window*np.math.factorial(window)**2)/float(np.math.factorial(2*window)))*(1.0+np.cos(T/turns))**window
 	vars['ZTABS'] = data[skipTurns:skipTurns+turns+1]
 
-	#TOL = 1.0e-4
-	TOL=1 # Panos: Larger Tolerance allows for the recovery of more harmonics
 	STAREP = FREFON/3.0
 	for term in range(nterms):
 		data_for_fft = np.multiply(vars['ZTABS'], vars['TWIN'])[:-1] # .astype('complex128')
@@ -246,8 +246,8 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 		INDX = np.argmax(RTAB)
 		VMAX = np.max(RTAB)
 
-		if INDX == 0 :
-			print('## PyNAFF::naff: Remove the DC component from the data (i.e. the mean).')
+		if INDX == 0 and warnings:
+			warn('## PyNAFF::naff: Remove the DC component from the data (i.e. the mean).')
 		if INDX <= turns/2.0:
 			IFR = INDX - 1
 		else:
