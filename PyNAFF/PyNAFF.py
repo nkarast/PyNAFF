@@ -1,25 +1,23 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
-try:
-	from builtins import range, int
-except ImportError:
-	from __builtin__ import range, int
 import numpy as np
-from warnings import warn
+import math
+from warnings import warn, simplefilter
+simplefilter("ignore", np.ComplexWarning)  # suppress persisting cast to complex warnings from numpy
 """
 # NAFF - Numerical Analysis of Fundamental Frequencies
-# Version : 1.1.4
+# Version : 1.1.5
 # Authors : F. Asvesta, N. Karastathis, P.Zisopoulos
-# Contact : nkarast .at. cern .dot. ch
+# Contact : fasvesta@cern.ch
 #
 """
 
-__version   = '1.1.4'
-__PyVersion = [2.7, 3.6]
-__authors   = ['F. Asvesta','N. Karastathis', 'P. Zisopoulos']
-__contact   = ['nkarast .at. cern .dot. ch']
+__version = '1.1.5'
+__PyVersion = [2.7, 3.7]
+__authors = {'F. Asvesta': 'fasvesta@cern.ch',
+			  'N. Karastathis': 'nkarast@gmail.com',
+			  'P. Zisopoulos': 'pzisopou@cern.ch'
+			}
 
-
-def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1, tol=1.0, warnings=True):
+def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1, tol=1e-4, warnings=True):
 	'''
 	The driving function for the NAFF algorithm.
 	Inputs :
@@ -31,7 +29,9 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 					  If True, a normal FFT is used (both negative and positive frequencies)
 					  If False, an rFFT is used (only positive frequencies)
 	*  window : the order of window to be applied on the input data (default =1)
-	*  tol : in original NAFF, tol=1e-4 (Laskar, mftnaf). Panos: Larger Tolerance tol=1 allows for the recovery of more harmonics
+	*  tol : Expert setting to increase the acceptance window for the harmonics, as long as `getFullSpectrum=True`.
+	         Higher values should let NAFF recover more frequencies, but the maximum number will always be `nterms`.
+	         Default value should be 1e-4.
 
 	Returns : Array with frequencies and amplitudes in the format:
 		  [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude}]
@@ -143,7 +143,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 		for i in range(len(vars['TFS'])):
 			TEST = np.abs(vars['TFS'][i] - FR)
 			if TEST < ECART:
-				if np.float(TEST)/np.float(ECART) < tol:
+				if float(TEST)/float(ECART) < tol: # tolerance value was 1e-4 in Laskar's original work.
 					IFLAG = -1
 					NUMFR = i
 					break
@@ -210,7 +210,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 			ZDIV = ZDIV + np.conj(vars['ZALP'][NF-1, i])*ZTEE[i]
 		DIV = np.sqrt(np.abs(ZDIV))
 		vars['ZALP'][NF-1,:] = vars['ZALP'][NF-1,:]/DIV
-		ZMUL = np.complex(A,B)/DIV
+		ZMUL = complex(A,B)/DIV
 		ZI = 0.0+1.0j
 
 		for i in range(0, NF):
@@ -231,7 +231,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 
 	T    = np.linspace(0, turns, num=turns+1, endpoint=True)*2.0*np.pi - np.pi*turns
 	vars['TWIN'] = 1.0+np.cos(T/turns)
-	vars['TWIN'] = ((2.0**window*np.math.factorial(window)**2)/float(np.math.factorial(2*window)))*(1.0+np.cos(T/turns))**window
+	vars['TWIN'] = ((2.0**window*math.factorial(window)**2)/float(math.factorial(2*window)))*(1.0+np.cos(T/turns))**window
 	vars['ZTABS'] = data[skipTurns:skipTurns+turns+1]
 
 	STAREP = FREFON/3.0
@@ -240,7 +240,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 		if getFullSpectrum:
 			y = np.fft.fft(data_for_fft)
 		else:
-			y = np.fft.rfft(data_for_fft.astype('float64'))
+			y = np.fft.rfft(data_for_fft)
 
 		RTAB = np.sqrt(np.real(y)**2 + np.imag(y)**2)/turns  # normalized
 		INDX = np.argmax(RTAB)
@@ -277,6 +277,9 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 # Example
 if __name__ == '__main__':
 	x = np.linspace(1, 500, num=500, endpoint=True)
-	data = np.sin(2.0*np.pi*0.34*x)+np.sin(2.0*np.pi*0.36*x)
-	a = naff(data, 300, 20, 0, False)
-	print(a)
+	f0, a0 = [0.31, 0.32, 0.33, 0.34, 0.34 + 0.016, 0.34 - 0.016], [1, 0.5, 0.25, 0.12, 0.06, 0.03]
+	data = np.array(sum([a * np.sin(2.0 * np.pi * (q * x)) for q, a in zip(f0, a0)]))
+	a = naff(data, 300, 20, 0, True)
+	print(f"Frequencies:\n{a[:,1]}")
+	print(f"Amplitudes:\n{a[:, 2]}")
+
