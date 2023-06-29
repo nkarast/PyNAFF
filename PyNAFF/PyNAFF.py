@@ -17,7 +17,7 @@ __authors = {'F. Asvesta': 'fasvesta@cern.ch',
 			  'P. Zisopoulos': 'pzisopou@cern.ch'
 			}
 
-def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1, tol=1.0, warnings=True):
+def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1, tol=1e-4, warnings=True):
 	'''
 	The driving function for the NAFF algorithm.
 	Inputs :
@@ -29,7 +29,8 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 					  If True, a normal FFT is used (both negative and positive frequencies)
 					  If False, an rFFT is used (only positive frequencies)
 	*  window : the order of window to be applied on the input data (default =1)
-	*  tol : in original NAFF, tol=1e-4 (Laskar, mftnaf). Panos: Larger Tolerance tol=1 allows for the recovery of more harmonics
+	*  tol : Expert setting to control the number of frequencies that will be recovered.
+	        Higher values increase the acceptance window. Default value should be 1e-4.
 
 	Returns : Array with frequencies and amplitudes in the format:
 		  [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude}]
@@ -141,7 +142,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 		for i in range(len(vars['TFS'])):
 			TEST = np.abs(vars['TFS'][i] - FR)
 			if TEST < ECART:
-				if float(TEST)/float(ECART) < tol:
+				if float(TEST)/float(ECART) < tol: # tolerance value was 1e-4 in Laskar's original work.
 					IFLAG = -1
 					NUMFR = i
 					break
@@ -275,6 +276,9 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 # Example
 if __name__ == '__main__':
 	x = np.linspace(1, 500, num=500, endpoint=True)
-	data = np.sin(2.0*np.pi*0.34*x)+np.sin(2.0*np.pi*0.36*x)
-	a = naff(data, 300, 20, 0, False)
-	print(a)
+	f0, a0 = [0.31, 0.32, 0.33, 0.34, 0.34 + 0.016, 0.34 - 0.016], [1, 0.5, 0.25, 0.12, 0.06, 0.03]
+	data = np.array(sum([a * np.sin(2.0 * np.pi * (q * x)) for q, a in zip(f0, a0)]))
+	a = naff(data, 300, 20, 0, True)
+	print(f"Frequencies:\n{a[:,1]}")
+	print(f"Amplitudes:\n{a[:, 2]}")
+
