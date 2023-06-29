@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - [fix/pzisopou/complex_function] Changed deprecated numpy functions to builtin ones.
 - [fix/pzisopou/complex_function] Changed the `__main__` example to include more harmonics.
-- [fix/pzisopou/complex_function] Changed the `tol`variable description in the docstring.
+- [fix/pzisopou/complex_function] Changed the `tol` variable description in the docstring.
 ### Removed
 - [fix/pzisopou/complex_function] Removed __future__ imports and other imports that were not used
 

@@ -29,8 +29,9 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 					  If True, a normal FFT is used (both negative and positive frequencies)
 					  If False, an rFFT is used (only positive frequencies)
 	*  window : the order of window to be applied on the input data (default =1)
-	*  tol : Expert setting to control the number of frequencies that will be recovered.
-	        Higher values increase the acceptance window. Default value should be 1e-4.
+	*  tol : Expert setting to increase the acceptance window for the harmonics, as long as `getFullSpectrum=True`.
+	         Higher values should let NAFF recover more frequencies, but the maximum number will always be `nterms`.
+	         Default value should be 1e-4.
 
 	Returns : Array with frequencies and amplitudes in the format:
 		  [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude}]
