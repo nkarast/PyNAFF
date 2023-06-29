@@ -1,23 +1,21 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
-try:
-	from builtins import range, int
-except ImportError:
-	from __builtin__ import range, int
 import numpy as np
-from warnings import warn
+import math
+from warnings import warn, simplefilter
+simplefilter("ignore", np.ComplexWarning)  # suppress persisting cast to complex warnings from numpy
 """
 # NAFF - Numerical Analysis of Fundamental Frequencies
-# Version : 1.1.4
+# Version : 1.1.5
 # Authors : F. Asvesta, N. Karastathis, P.Zisopoulos
-# Contact : nkarast .at. cern .dot. ch
+# Contact : fasvesta@cern.ch
 #
 """
 
-__version   = '1.1.4'
-__PyVersion = [2.7, 3.6]
-__authors   = ['F. Asvesta','N. Karastathis', 'P. Zisopoulos']
-__contact   = ['nkarast .at. cern .dot. ch']
-
+__version = '1.1.5'
+__PyVersion = [2.7, 3.7]
+__authors = {'F. Asvesta': 'fasvesta@cern.ch',
+			  'N. Karastathis': 'nkarast@gmail.com',
+			  'P. Zisopoulos': 'pzisopou@cern.ch'
+			}
 
 def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1, tol=1.0, warnings=True):
 	'''
@@ -143,7 +141,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 		for i in range(len(vars['TFS'])):
 			TEST = np.abs(vars['TFS'][i] - FR)
 			if TEST < ECART:
-				if np.float(TEST)/np.float(ECART) < tol:
+				if float(TEST)/float(ECART) < tol:
 					IFLAG = -1
 					NUMFR = i
 					break
@@ -210,7 +208,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 			ZDIV = ZDIV + np.conj(vars['ZALP'][NF-1, i])*ZTEE[i]
 		DIV = np.sqrt(np.abs(ZDIV))
 		vars['ZALP'][NF-1,:] = vars['ZALP'][NF-1,:]/DIV
-		ZMUL = np.complex(A,B)/DIV
+		ZMUL = complex(A,B)/DIV
 		ZI = 0.0+1.0j
 
 		for i in range(0, NF):
@@ -231,7 +229,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 
 	T    = np.linspace(0, turns, num=turns+1, endpoint=True)*2.0*np.pi - np.pi*turns
 	vars['TWIN'] = 1.0+np.cos(T/turns)
-	vars['TWIN'] = ((2.0**window*np.math.factorial(window)**2)/float(np.math.factorial(2*window)))*(1.0+np.cos(T/turns))**window
+	vars['TWIN'] = ((2.0**window*math.factorial(window)**2)/float(math.factorial(2*window)))*(1.0+np.cos(T/turns))**window
 	vars['ZTABS'] = data[skipTurns:skipTurns+turns+1]
 
 	STAREP = FREFON/3.0
@@ -240,7 +238,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 		if getFullSpectrum:
 			y = np.fft.fft(data_for_fft)
 		else:
-			y = np.fft.rfft(data_for_fft.astype('float64'))
+			y = np.fft.rfft(data_for_fft)
 
 		RTAB = np.sqrt(np.real(y)**2 + np.imag(y)**2)/turns  # normalized
 		INDX = np.argmax(RTAB)
