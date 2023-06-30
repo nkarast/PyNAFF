@@ -5,7 +5,7 @@
 from setuptools import setup, find_packages
 from os import path
 from codecs import open
-import numpy as np
+#import numpy as np
 
 
 here = path.abspath(path.dirname(__file__))
@@ -15,7 +15,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 
-include_dirs = [np.get_include()]
+#include_dirs = [np.get_include()]
 
 
 setup(
