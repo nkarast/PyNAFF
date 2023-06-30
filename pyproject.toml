@@ -1,8 +1,0 @@
-[build-system]
-# https://setuptools.readthedocs.io/en/latest/setuptools.html#setup-cfg-only-projects
-requires = [
-  "setuptools >= 58",
-  "wheel",
-  "numpy"
-]
-build-backend = "setuptools.build_meta"
