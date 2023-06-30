@@ -31,7 +31,7 @@ setup(
     # licence
     licence = 'GPLv3',
     keywords = "naff numerical analysis frequency fundamental",
-    install_requires=['numpy', 'future'],
+    install_requires=['numpy'],
     packages = find_packages(),
 #    ext_modules = cythonize(extensions),
 )
