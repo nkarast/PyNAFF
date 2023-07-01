@@ -1,17 +1,22 @@
 import numpy as np
-import math
+import math, sys
+import logging
+logging.basicConfig(stream=sys.stdout, format="[%(name)s::%(funcName)s] - %(levelname)s: %(message)s")
+
 from warnings import warn, simplefilter
-simplefilter("ignore", np.ComplexWarning)  # suppress persisting cast to complex warnings from numpy
+simplefilter("ignore", np.ComplexWarning) 
 """
-# NAFF - Numerical Analysis of Fundamental Frequencies
-# Version : 1.1.5
+# NAFF - Numerical Analysis of Fundamental Frequencies 
+# Version : 1.2.0
 # Authors : F. Asvesta, N. Karastathis, P.Zisopoulos
 # Contact : fasvesta@cern.ch
+# 
+# -- this version is left for backwards compatibility
 #
 """
 
-__version = '1.1.5'
-__PyVersion = [2.7, 3.7]
+__version = '1.2.0'
+__PyVersion = [3.9]
 __authors = {'F. Asvesta': 'fasvesta@cern.ch',
 			  'N. Karastathis': 'nkarast@gmail.com',
 			  'P. Zisopoulos': 'pzisopou@cern.ch'
@@ -36,10 +41,19 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 	Returns : Array with frequencies and amplitudes in the format:
 		  [order of harmonic, frequency, Amplitude, Re{Amplitude}, Im{Amplitude}]
 	'''
+	logger = logging.getLogger('PyNAFF.PyNAFF')
+	logger.setLevel('INFO')
+
+	# Deprecation warning
+	warn("The execution of PyNAFF.naff() is to be deprecated. Please use the PyNAFF.FundamentalFrequencies class for future compatibility.", DeprecationWarning, stacklevel=2)
 	if turns >= len(data)+1:
-		raise ValueError('#naff : Input data must be at least of length turns+1.')
+		err_msg = "Input data must be at least of length turns+1."
+		logger.fatal(err_msg)
+		raise ValueError(err_msg)
 	if turns < 6:
-		raise ValueError('#naff : Minimum number of turns is 6.')
+		err_msg = "Minimum number of turns is 6."
+		logger.fatal(err_msg)
+		raise ValueError(err_msg)
 
 	if np.mod(turns,6)!=0:
 		a,b=divmod(turns,6)
@@ -60,7 +74,9 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 		Calculate the integral using Hardy's method'
 		'''
 		if np.mod(turns, 6)!= 0:
-			raise ValueError("Turns need to be *6")
+			err_msg = "Turns need to be *6."
+			logger.fatal(err_msg)
+			raise ValueError(err_msg)
 		K = int(turns/6)
 
 		i_line = np.linspace(1, turns, num=turns, endpoint=True)
@@ -247,7 +263,7 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 		VMAX = np.max(RTAB)
 
 		if INDX == 0 and warnings:
-			warn('## PyNAFF::naff: Remove the DC component from the data (i.e. the mean).')
+			warn('Remove the DC component from the data (i.e. the mean).')
 		if INDX <= turns/2.0:
 			IFR = INDX - 1
 		else:
@@ -275,11 +291,14 @@ def naff(data, turns=300, nterms=1, skipTurns=0, getFullSpectrum=False, window=1
 ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ### - - - ###
 
 # Example
-if __name__ == '__main__':
-	x = np.linspace(1, 500, num=500, endpoint=True)
-	f0, a0 = [0.31, 0.32, 0.33, 0.34, 0.34 + 0.016, 0.34 - 0.016], [1, 0.5, 0.25, 0.12, 0.06, 0.03]
-	data = np.array(sum([a * np.sin(2.0 * np.pi * (q * x)) for q, a in zip(f0, a0)]))
-	a = naff(data, 300, 20, 0, True)
-	print(f"Frequencies:\n{a[:,1]}")
-	print(f"Amplitudes:\n{a[:, 2]}")
+# if __name__ == '__main__':
+# 	Generate sample signal
+# 	x = np.linspace(1, 500, num=500, endpoint=True)
+# 	f0, a0 = [0.31, 0.32, 0.33, 0.34, 0.34 + 0.016, 0.34 - 0.016], [1, 0.5, 0.25, 0.12, 0.06, 0.03]
+# 	data = np.array(sum([a * np.sin(2.0 * np.pi * (q * x)) for q, a in zip(f0, a0)]))
+#	
+# 	Run the function and get the results
+# 	a = naff(data, 300, 20, 0, True)
+# 	print(f"Frequencies:\n{a[:,1]}")
+# 	print(f"Amplitudes:\n{a[:, 2]}")
 
