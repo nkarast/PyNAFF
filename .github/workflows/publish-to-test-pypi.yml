@@ -1,0 +1,26 @@
+name: Publish Python 🐍 distributions 📦 to PyPI
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build-n-publish:
+    name: Build and publish to Test-PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.x"
+    - run: pip install -U wheel build
+    - name: Build a binary wheel and a source tarball
+      run: python -m build
+    - name: Publish distribution 📦 to Test PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYNAFF_TESTPYPI_TOKEN }}
+        repository-url: https://test.pypi.org/legacy/
+    
