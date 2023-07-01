@@ -5,7 +5,7 @@ setup(
         name = 'PyNAFF',
         version = '1.1.5',
         license='GPLv3',
-        description = 'A Python module that implements the Numerical Analysis of Fundamental Frequencies (NAFF) algorithm',   # Give a short description about your library
+        description = 'A Python module that implements the Numerical Analysis of Fundamental Frequencies (NAFF) algorithm', 
         author='Nikos Karastathis',
         author_email='nkarast@gmail.com',
         url='https://github.com/nkarast/PyNAFF',
