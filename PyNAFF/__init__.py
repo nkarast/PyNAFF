@@ -1,2 +1,2 @@
-from .PyNAFF import *
-__version__ = '1.1.4'
+from PyNAFF.FundamentalFrequencies import FundamentalFrequencies
+from PyNAFF.PyNAFF import naff
