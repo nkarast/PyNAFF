@@ -5,7 +5,7 @@ on:
     types: [published]
 jobs:
   build-n-publish:
-    name: Build and publish to Test-PyPI
+    name: Build and publish to PyPI
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -15,10 +15,10 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: "3.x"
-    - run: pip install -U wheel build
+    - run: pip install -U wheel build && pip install -U pip setuptools twine
     - name: Build a binary wheel and a source tarball
       run: python -m build
-    - name: Publish distribution 📦 to Test PyPI
+    - name: Publish distribution 📦 to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         password: ${{ secrets.PYPI_WF_ACTION_TOKEN }}    
