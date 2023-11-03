@@ -4,13 +4,13 @@ from warnings import warn, simplefilter
 simplefilter("ignore", np.ComplexWarning)  # suppress persisting cast to complex warnings from numpy
 """
 # NAFF - Numerical Analysis of Fundamental Frequencies
-# Version : 1.1.5
+# Version : 1.1.6
 # Authors : F. Asvesta, N. Karastathis, P.Zisopoulos
 # Contact : fasvesta@cern.ch
 #
 """
 
-__version = '1.1.5'
+__version = '1.1.6'
 __PyVersion = [2.7, 3.7]
 __authors = {'F. Asvesta': 'fasvesta@cern.ch',
 			  'N. Karastathis': 'nkarast@gmail.com',

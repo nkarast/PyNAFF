@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
         name = 'PyNAFF',
-        version = '1.1.5',
+        version = '1.1.6',
         license='GPLv3',
         description = 'A Python module that implements the Numerical Analysis of Fundamental Frequencies (NAFF) algorithm', 
         author='Nikos Karastathis',

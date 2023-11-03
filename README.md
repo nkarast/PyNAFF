@@ -59,8 +59,3 @@ pnf.naff(signal, turns=500, nterms=1, skipTurns=0, getFullSpectrum=False, window
 pnf.naff(signal, 500, 1, 0 , False)[0][1]
 
 ```
-
-
-
-
--- nkarast
