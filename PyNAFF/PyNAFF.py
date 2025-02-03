@@ -1,7 +1,7 @@
 import numpy as np
 import math
 from warnings import warn, simplefilter
-simplefilter("ignore", np.ComplexWarning)  # suppress persisting cast to complex warnings from numpy
+simplefilter("ignore", np.exceptions.ComplexWarning)  # suppress persisting cast to complex warnings from numpy
 """
 # NAFF - Numerical Analysis of Fundamental Frequencies
 # Version : 1.1.6
