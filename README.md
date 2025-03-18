@@ -3,7 +3,7 @@
 Authors:
 
 *  Foteini Asvesta (fasvesta .at. cern .dot. ch)
-*  Nikos Karastathis (nkarast .at. cern .dot. ch)
+*  Nikos Karastathis (nkarast)
 *  Panagiotis Zisopoulos (pzisopou .at. cern .dot. ch)
 
 A Python module that implements the [Numerical Analysis of Fundamental Frequencies method of J. Laskar](http://www.sciencedirect.com/science/article/pii/001910359090084M).
