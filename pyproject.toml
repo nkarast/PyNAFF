@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PyNAFF"
+version = "1.1.9"
+description = "A Python module that implements the Numerical Analysis of Fundamental Frequencies (NAFF) algorithm"
+authors = [
+    {name = "Nikos Karastathis", email = "nkarast@gmail.com"},
+]
+license = {text = "GPLv3"}
+readme = "README.md"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Build Tools",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+]
+keywords = ["NAFF", "FREQUENCY ANALYSIS"]
+dependencies = [
+    "numpy",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/nkarast/PyNAFF"
+"Bug Tracker" = "https://github.com/nkarast/PyNAFF/issues"
