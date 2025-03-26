@@ -17,9 +17,12 @@ jobs:
       with:
         python-version: "3.x"
     - run: pip install -U wheel build && pip install -U pip setuptools twine
+    - name: Clean dist directory
+      run: rm -rf dist/
     - name: Build a binary wheel and a source tarball
       run: python -m build
     - name: Publish distribution 📦 to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{ secrets.PYPI_WF_ACTION_TOKEN }}    
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: twine upload dist/* --skip-existing
